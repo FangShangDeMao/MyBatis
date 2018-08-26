@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/DynamicSQL/DynamicSQL.iml" filepath="$PROJECT_DIR$/DynamicSQL/DynamicSQL.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ManyToOne/ManyToOne.iml" filepath="$PROJECT_DIR$/ManyToOne/ManyToOne.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyBatis.iml" filepath="$PROJECT_DIR$/MyBatis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyBatisBase/MyBatisBase.iml" filepath="$PROJECT_DIR$/MyBatisBase/MyBatisBase.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyBatisTip1/MyBatisTip1.iml" filepath="$PROJECT_DIR$/MyBatisTip1/MyBatisTip1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/RelationShip/RelationShip.iml" filepath="$PROJECT_DIR$/RelationShip/RelationShip.iml" />
+    </modules>
+  </component>
+</project>

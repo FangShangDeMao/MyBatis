@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fsdm.dao.IUsersMapper">
+    <sql id="sql">
+         SELECT id,userName,password FROM users
+    </sql>
+
+    <select id="login" resultType="Users">
+        <include refid="sql"/>
+        WHERE userName=#{name} AND password=#{pwd};
+    </select>
+
+    <select id="findAll" resultType="Users">
+        <include refid="sql"/>
+    </select>
+
+    <select id="findBy" resultType="Users">
+        <include refid="sql"/>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="userName!=null and !&quot;&quot;.equals(userName.trim())">
+                AND userName=#{userName}
+            </if>
+            <if test="password!=null and !&quot;&quot;.equals(password.trim())">
+                AND password=#{password}
+            </if>
+            <if test="id!=0">
+                AND id=#{id}
+            </if>
+        </trim>
+    </select>
+    <delete id="delBy">
+        DELETE FROM users
+        <trim prefix="where">
+            <choose>
+                <when test="id!=0">
+                    id=#{id}
+                </when>
+                <when test="userName!=null and !&quot;&quot;.equals(userName.trim())">
+                    userName=#{userName}
+                </when>
+                <otherwise>
+                    password=#{password}
+                </otherwise>
+            </choose>
+        </trim>
+    </delete>
+    <update id="upBy">
+        UPDATE users
+        <trim prefix="set" prefixOverrides=",">
+            <if test="newss.userName!=null and !&quot;&quot;.equals(newss.userName.trim())">
+                , userName=#{newss.userName}
+            </if>
+            <if test="newss.password!=null and !&quot;&quot;.equals(newss.password.trim())">
+                , password=#{newss.password}
+            </if>
+        </trim>
+        <where>
+            <choose>
+                <when test="by.id!=0">
+                    id=#{by.id}
+                </when>
+                <when test="by.userName!=null and !&quot;&quot;.equals(by.userName.trim())">
+                    userName=#{by.userName}
+                </when>
+                <otherwise>
+                    password=#{by.password}
+                </otherwise>
+            </choose>
+        </where>
+
+    </update>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace务必和接口的全类名一致 -->
+<mapper namespace="com.fsdm.dao.CountryMapper">
+    <!--延迟加载-->
+
+
+
+
+    <resultMap id="countryMap" type="Country">
+        <id property="cId" column="cid"/>
+        <result column="cname" property="cName"/>
+        <!--延迟加载  使用时触发-->
+        <collection property="provincials" ofType="Provincial" select="selectPByCId" column="cid"/>
+    </resultMap>
+
+
+    <select id="selectByCId" resultMap="countryMap">
+        SELECT cid,cname FROM country
+        <where>
+             country.cid=#{id}
+        </where>
+    </select>
+    <select id="selectPByCId" resultType="Provincial">
+        SELECT pid,pname FROM provincial
+        <where>
+          countryid  =#{id}
+        </where>
+    </select>
+</mapper>

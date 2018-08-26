@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace务必和接口的全类名一致 -->
+<mapper namespace="com.fsdm.dao.UserMapper">
+    <resultMap id="myUserMap" type="Users">
+        <id property="id" column="id"></id>
+        <result property="userName" column="userName"></result>
+        <result property="password" column="password"></result>
+    </resultMap>
+    <!--if可以匹配多次
+    /**
+    *if中的书写的是属性值
+    *if节点中书写的是字段名
+     -->
+    <select id="findUsersByCondition" parameterType="Users" resultMap="myUserMap">
+        SELECT `id`,`userName`,`password` FROM `users`
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="userName!=null and userName!=''">
+                and userName like concat ('%',#{userName},'%')
+            </if>
+            <if test="password!=null and password!=''">
+                and password =#{password}
+            </if>
+        </trim>
+    </select>
+
+    <!--修改 update  set+if+trim-->
+    <update id="updateBySet" parameterType="Users">
+        UPDATE `users`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userName!=null and userName!=''">
+                userName=#{userName},
+            </if>
+            <if test="password!=null and password!=''">
+                password =#{password},
+            </if>
+        </trim>
+        <where>
+            id=#{id}
+        </where>
+    </update>
+
+
+    <!--choose +when +otherwise-->
+    <select id="selectByChoose" parameterType="Users" resultMap="myUserMap">
+        SELECT `id`,`userName`,`password` FROM `users`
+        <where>
+            <choose>
+                <when test="userName!=null and userName!=''">
+                    and userName like concat('%',#{userName},'%')
+                </when>
+                <when test="password!=null and password!=''">
+                    and password =#{password}
+                </when>
+                <otherwise>
+                    id=#{id}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <insert id="insertRole" parameterType="Users" useGeneratedKeys="true" keyProperty="id">
+        <selectKey keyProperty="id" resultType="int" order="BEFORE">
+            SELECT IF(MAX(id) IS NULL,1,MAX(id)+2) AS id FROM `users`
+        </selectKey>
+        INSERT INTO `users` (`userName`,`password`) VALUES (#{name},#{`password`})
+    </insert>
+
+    <select id="selectByArray" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="array.length>0">
+                id IN
+                <foreach collection="array" open="(" close=")" separator="," item="myId">
+                    #{myId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByList" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="list.size>0">
+                <foreach collection="list" separator="or" item="myName">
+                    userName IN (
+                    SELECT userName FROM users
+                    <where>
+                        userName LIKE concat('%',#{myName},'%')
+                    </where>
+                    )
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertByList">
+        INSERT INTO users(userName,password) VALUE
+        <foreach collection="list" separator="," item="myUser">
+            (#{myUser.userName},#{myUser.password})
+        </foreach>
+    </insert>
+    <!--map 三种取值方式-->
+    <select id="selectByMap" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="myMap.keys.size>0">
+                id IN
+                <foreach collection="myMap" open="(" close=")" separator="," item="map">
+                    #{map}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByMap11" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="myMap.keys.size>0">
+                id IN
+                <foreach collection="myMap.keys" open="(" close=")" separator="," item="map">
+                    #{myMap.${map}}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+  <select id="selectByMap22" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="myMap.keys.size>0">
+                id IN
+                <foreach collection="myMap.keys" open="(" close=")" separator="," item="map">
+                    #{myMap[${map}]}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectByMapUsers" resultMap="myUserMap">
+        SELECT * FROM users
+        <where>
+            <if test="myMap.keys.size>0">
+                id IN
+                <foreach collection="myMap" open="(" close=")" separator="," item="map">
+                    #{map.id}
+                </foreach>
+            </if>
+        </where>
+    </select>
+</mapper>

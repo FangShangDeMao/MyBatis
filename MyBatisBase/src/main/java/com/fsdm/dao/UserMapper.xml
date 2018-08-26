@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fsdm.dao.UserMapper">
+    <resultMap id="users" type="com.fsdm.pojo.Users">
+        <id property="id" column="id"/>
+        <result column="userName" property="userName"/>
+        <result column="password" property="password"/>
+        <collection property="list" ofType="com.fsdm.pojo.Uu">
+            <result property="uid" column="uid"/>
+            <result property="name" column="name"/>
+        </collection>
+    </resultMap>
+
+    <select id="findAll" resultMap="users">
+        <include refid="sql"/>,uu WHERE users.uid=uu.uid;
+    </select>
+
+    <select id="findById" resultType="Users">
+        <include refid="sql"/>
+        WHERE id=#{xx};
+    </select>
+
+    <sql id="sql">
+        SELECT * FROM users
+    </sql>
+
+    <insert id="add" parameterType="Users">
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        INSERT INTO users(userName,password) VALUES (#{userName},#{password});
+    </insert>
+
+    <delete id="del">
+        DELETE FROM users WHERE id=#{xxx};
+    </delete>
+
+    <update id="up" parameterType="Users">
+        UPDATE users SET userName=#{userName},password=#{password} WHERE id=#{id};
+    </update>
+
+    <select id="findByTwo1" resultType="Users">
+        <include refid="sql"/>
+        WHERE userName=#{0} AND password=#{1};
+    </select>
+
+    <select id="findByTwo2" resultType="Users">
+        <include refid="sql"/>
+        WHERE userName=#{name} AND password=#{pwd};
+    </select>
+
+    <select id="findByMap1" resultType="Users">
+        <include refid="sql"/>
+        WHERE userName=#{name} AND password=#{password};
+    </select>
+
+    <select id="findByMap2" resultType="Users">
+        <include refid="sql"/>
+        WHERE userName=#{users.userName} AND password=#{users.password};
+    </select>
+
+
+</mapper>
